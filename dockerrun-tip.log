@@ -1,0 +1,68 @@
+0, build image
+
+
+
+1, run docker container
+
+	docker run -t -i -p 5915:5915 --privileged --name panda -v /home/lma14/lab:/root/lab  lele/panda-net
+or with port forwarding for ssh qemu guest inside
+	docker run -t -i -p 5915:5915 -p 2222:2222 --privileged --name panda -v /home/lma14/lab:/root/lab  lele/panda-net
+
+2, get console
+
+	docker start f99
+	docker exec -ti f99 /bin/bash
+
+3, in con, run virtual machine using qemu:
+
+	/root/panda/build/x86_64-softmmu/qemu-system-x86_64 -net tap -net nic -m 512 -hda /root/lab/osprofiling/images/debian_wheezy_amd64_standard.qcow2 -vnc :15 -monitor stdio
+
+     or via port forwarding:
+	
+	/root/panda/build/x86_64-softmmu/qemu-system-x86_64 -net tap -net nic -m 512 -hda /root/lab/osprofiling/images/debian_wheezy_amd64_standard.qcow2 -vnc :15 -redir tcp:2222::22 -monitor stdio
+
+4, in con, build panda:
+	cd /root/panda/build
+	../build.sh
+
+5, in con, run panda replay:
+
+    cd /root/out-panda/recordstores
+
+	/root/panda/build/x86_64-softmmu/qemu-system-x86_64 -net user -net nic -m 512  -monitor stdio -replay deb03 -panda callstack_instr -panda stringsearch:name=ss
+
+    /root/panda/build/x86_64-softmmu/qemu-system-x86_64 -net user -net nic -m 512  -monitor stdio -replay deb03 -panda trace_sample:file=instr_trace_kernel.log
+
+    /root/panda/build/x86_64-softmmu/qemu-system-x86_64 -net user -net nic -m 512  -monitor stdio -replay deb0101 -os linux-64-deb7x64 -panda callstack_instr -panda trace_mem:asid="tstlele" 2>&1 | gzip > deb0101.trace-mem.gz
+
+
+
+   25  docker run hello-world
+   27  docker run hello-world
+  152  docker run hello-world
+  165  docker run -i -t --name=panda ctfhacker/panda-re
+  203  docker run -t -i --name panda2 -v lab:/root/lab ctfhacker/panda-re
+  206  docker run -t -i --name panda2 -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  213  docker run -t -i --name panda -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  235  docker run -t -i -p 5915 --name panda -v lab:/root/lab ctfhacker/panda-re
+  237  docker run -t -i -p 5915 --name panda -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  272  docker run -t -i --network=host --name panda -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  273  docker run -t -i --name panda -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  275  docker run -t -i --name panda -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  277  docker run -t -i ---name panda -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  289  docker run -t -i --network=host --name panda-net -v /home/lma14/lab:/root/lab ctfhacker/panda-re
+  375  docker run -t -i --name panda -v /home/lma14/lab:/root/lab lele/panda-net
+  377  docker run -t -i --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  379  docker run -t -i --privileged --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  380  docker run -t -i --privileged -p 5915 --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  382  docker run -t -i --privileged -p 5915 --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  384  docker run -t -i -p 5915:5915 -p 2222:2222  --privileged --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  387  docker run -t -i -p 5915:5915 -p 2222:2222  --privileged --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  389  docker run -t -i -p 5915:5915 --privileged --name panda -v /home/lma14/lab:/root/lab -v /dev/net:/dev/net lele/panda-net 
+  390  docker run -t -i -p 5915:5915 --privileged --name panda -v /home/lma14/lab:/root/lab  lele/panda-net 
+  392  docker run -t -i -p 5915:5915 --privileged --name panda -v /home/lma14/lab:/root/lab  lele/panda-net 
+  393  docker run -t -i -p 5915:5915  --name panda -v /home/lma14/lab:/root/lab  lele/panda-net 
+  395  docker run -t -i -p 5915:5915  --name panda -v /home/lma14/lab:/root/lab  lele/panda-net 
+  397  docker run -t -i -p 5915:5915 --privileged --name panda -v /home/lma14/lab:/root/lab  lele/panda-net 
+  680  history | grep 'docker run'
+  681  history | grep 'docker run' >> dockerrun-tip.log 
